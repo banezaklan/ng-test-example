@@ -16,6 +16,7 @@ app.service('UserService', ['$resource', '$q', function($resource, $q) {
                 $q
                         .when(userRequest.$promise)
                         .then(function(response) {
+                            //response.data.xyz='123'; //uncomment to make the service test fail
                             userModel = response.data;
                             deferred.resolve(response);
                         });
@@ -31,6 +32,7 @@ app.service('TodoService', ['$http', function(http) {
         return{
             getTodos: function() {
                 return http.post("/GetTodos").then(function(result) {
+                    
                     return result.data.data;
                 });
             }
@@ -46,12 +48,16 @@ app.controller('MainCtrl', function($scope, $http, UserService, TodoService) {
     this.message = "Hello";
     $scope.theMoney = 0;
     $scope.todos = [];
+    $scope.user = {};
 
     $scope.init = function() {
-        TodoService.getTodos().then(function(data) {
-            $scope.todos = data;
-            
+        
+        TodoService.getTodos().then( function(response) {
+            $scope.todos = response.data;
         });
+        
+        $scope.user = UserService.data();
+        
     };
 
     $scope.giveMeSomeMoney = function() {
@@ -63,8 +69,9 @@ app.controller('MainCtrl', function($scope, $http, UserService, TodoService) {
         //console.log("takeOutWallet");
     };
 
-    $scope.getTodos = function() {
-
+    $scope.login = function(username,password){
+        UserService.login(username,password);
+        $scope.user = UserService.data();
     };
 
     $scope.init();

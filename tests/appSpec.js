@@ -3,29 +3,39 @@ describe("myApp Tests", function() {
     var $scope;
     var mainCtrl;
     var $httpBackend;
+    var q;
 
     var TodoServiceMock;
     var UserServiceMock;
 
+    var mockDataTodos = {data: [
+            {id: 1, title: 'Do this', done: false},
+            {id: 2, title: 'Do that', done: false},
+            {id: 3, title: 'Do the other', done: false},
+            {id: 4, title: 'Do the thing', done: false},
+        ]};
+
     beforeEach(module("myApp"));
 
 
-    beforeEach(inject(function(_$httpBackend_, $rootScope, $controller, $injector, $http) {
+    beforeEach(inject(function(_$httpBackend_, $rootScope, $controller, $injector, $http, $q) {
+
+        $httpBackend = _$httpBackend_;
+        q = $q;
 
         TodoServiceMock = {
             getTodos: function() {
-                return {data: [
-                        {id: 1, title: 'Do this', done: false},
-                        {id: 2, title: 'Do that', done: false},
-                        {id: 3, title: 'Do the other', done: false},
-                        {id: 4, title: 'Do the thing', done: false},
-                    ]};
+
+                deferred = q.defer();
+                // Place the fake return object here
+                deferred.resolve(mockDataTodos);
+                return deferred.promise;
             }
         };
 
         UserServiceMock = {
             data: function() {
-                return {id: 123, firstName: 'John', lastName: 'Doe'};
+                return {};
             },
             login: function(username, password) {
                 deferred = q.defer();
@@ -35,14 +45,14 @@ describe("myApp Tests", function() {
             }
         };
 
-        $httpBackend = _$httpBackend_;
+
+
         //userService = $injector.get('UserService');
 
         $scope = $rootScope.$new();
+        spyOn(TodoServiceMock, "getTodos").andCallThrough();
 
-        /*spyOn(TodoServiceMock, "getTodos").andCallThrough();*/
-
-        mainCtrl = $controller( "MainCtrl", {
+        mainCtrl = $controller("MainCtrl", {
             $scope: $scope,
             $http: $http,
             UserService: UserServiceMock,
@@ -61,82 +71,63 @@ describe("myApp Tests", function() {
 
         beforeEach(function() {
 
-
         });
 
-//        it('should ensure TodoServiceMock.getTodos() was called', function() {
-//            //$httpBackend.flush();
-//            expect(TodoServiceMock.getTodos).toHaveBeenCalled();
-//        });
+
 
         it("Should have a message Hello!", function() {
             expect(mainCtrl.message).toBe("Hello");
         });
-//
-//        it("Sholud have scope var theMoney be 0", function() {
-//            expect($scope.theMoney).toBe(0);
-//        });
-//
-//
-//        it("Should have scope method giveMeSomeMoney defined", function() {
-//            expect($scope.giveMeSomeMoney).toBeDefined();
-//        });
-//
-//        it("Should have scope method takeOutWallet defined", function() {
-//            expect(mainCtrl.takeOutWallet).toBeDefined();
-//        });
-//
-//        it("Should have method giveMeSomeMoney called", function() {
-//            spyOn($scope, 'giveMeSomeMoney').andCallThrough();
-//            spyOn(mainCtrl, 'takeOutWallet').andCallThrough();
-//            $scope.giveMeSomeMoney();
-//            expect($scope.giveMeSomeMoney).toHaveBeenCalled();
-//            expect(mainCtrl.takeOutWallet).toHaveBeenCalled();
-//        });
+
+        it("Sholud have scope var theMoney be 0", function() {
+            expect($scope.theMoney).toBe(0);
+        });
 
 
+        it("Should have scope method giveMeSomeMoney defined", function() {
+            expect($scope.giveMeSomeMoney).toBeDefined();
+        });
+
+        it("Should have scope method takeOutWallet defined", function() {
+            expect(mainCtrl.takeOutWallet).toBeDefined();
+        });
+
+        it("Should have method giveMeSomeMoney called", function() {
+            spyOn($scope, 'giveMeSomeMoney').andCallThrough();
+            spyOn(mainCtrl, 'takeOutWallet').andCallThrough();
+            $scope.giveMeSomeMoney();
+            expect($scope.giveMeSomeMoney).toHaveBeenCalled();
+            expect(mainCtrl.takeOutWallet).toHaveBeenCalled();
+        });
 
 
-//        describe("method getTodos", function() {
-//
-//            beforeEach(function() {
-//
-//
-//            });
-//
-//            afterEach(function() {
-//                $httpBackend.verifyNoOutstandingExpectation();
-//                $httpBackend.verifyNoOutstandingRequest();
-//            });
-//
-//            it("should return proper data", function() {
-//                $httpBackend.expectPOST('/GetTodos').respond(200, {data: [{id: 1, title: 'Do this', done: false}]});
-//
-//                $scope.getTodos();
-//                $httpBackend.flush();
-//                expect($scope.todos[0]).toEqual({id: 1, title: 'Do this', done: false});
-//            });
-//
-//        });
+        /* todos service related */
+        it('should ensure method was called', function() {
+            //$httpBackend.flush();
+            expect(TodoServiceMock.getTodos).toHaveBeenCalled();
+        });
+
+        it("scope todos should contain proper mock data", function() {
+            $scope.$root.$digest();
+            expect($scope.todos).toEqual(mockDataTodos.data);
+        });
+
+        /* UserService related */
+        it("scope.user should initially be empty", function() {
+            expect($scope.user).toEqual({});
+        });
+
+
+        it("scope.login() should call UserService.login() method", function() {
+            spyOn(UserServiceMock, 'login').andCallThrough();
+            $scope.login('johndoe@anonymous.com', '123456');
+            expect(UserServiceMock.login).toHaveBeenCalled();
+        });
+
+
 
     });
 
-//    describe("Service UserService", function() {
-//        var user;
-//
-//        it("method login() should accept user login data and service should then contain proper user data", function() {
-//            var testData = {id: 123, firstName: 'John', lastName: 'Doe'};
-//            //console.log(userService);
-//
-//            $httpBackend.expectPOST('/User/Login', {username: 'johndoe@anonimous.com', password: '123456'})
-//                    .respond(200, {data: testData});
-//
-//            userService.login('johndoe@anonimous.com', '123456');
-//            $httpBackend.flush();
-//            expect(userService.data()).toEqual(testData);
-//
-//        });
-//    });
 
 
 });
