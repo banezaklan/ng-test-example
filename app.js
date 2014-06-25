@@ -31,9 +31,11 @@ app.service('TodoService', ['$http', function(http) {
 
         return{
             getTodos: function() {
-                return http.post("/GetTodos").then(function(result) {
-                    
-                    return result.data.data;
+                return http.post("/GetTodos").then(function(response) {
+                    //Important, the first data is by default, the second is part of custom repsponse
+                    //the idea being we add more feilds to response as needed.
+                    //console.log(response.data.data);
+                    return response.data;
                 });
             }
         };

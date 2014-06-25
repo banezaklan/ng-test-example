@@ -8,12 +8,12 @@ describe("myApp Tests", function() {
     var TodoServiceMock;
     var UserServiceMock;
 
-    var mockDataTodos = {data: [
+    var mockDataTodos = [
             {id: 1, title: 'Do this', done: false},
             {id: 2, title: 'Do that', done: false},
             {id: 3, title: 'Do the other', done: false},
             {id: 4, title: 'Do the thing', done: false},
-        ]};
+        ];
 
     beforeEach(module("myApp"));
 
@@ -27,8 +27,10 @@ describe("myApp Tests", function() {
             getTodos: function() {
 
                 deferred = q.defer();
-                // Place the fake return object here
-                deferred.resolve(mockDataTodos);
+                // Place the fake return object here.
+                // Important to simulate the server mock response where the first 'data' is from the library and the second is custom param
+                // where the idea is to have more params in the response as needed.
+                deferred.resolve( { data: mockDataTodos }  );
                 return deferred.promise;
             }
         };
@@ -73,8 +75,6 @@ describe("myApp Tests", function() {
 
         });
 
-
-
         it("Should have a message Hello!", function() {
             expect(mainCtrl.message).toBe("Hello");
         });
@@ -109,7 +109,7 @@ describe("myApp Tests", function() {
 
         it("scope todos should contain proper mock data", function() {
             $scope.$root.$digest();
-            expect($scope.todos).toEqual(mockDataTodos.data);
+            expect($scope.todos).toEqual(mockDataTodos);
         });
 
         /* UserService related */

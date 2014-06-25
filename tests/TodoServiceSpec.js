@@ -1,13 +1,11 @@
 
 describe("TodoService Tests", function() {
-    var $scope;
+    
     var todoService;
     var $httpBackend;
-    var q;
-
 
     var mockDataTodos = [
-            {id: 1, title: 'Do this', done: false},
+            {id: 123456, title: 'Do this', done: false},
             {id: 2, title: 'Do that', done: false},
             {id: 3, title: 'Do the other', done: false},
             {id: 4, title: 'Do the thing', done: false},
@@ -16,14 +14,9 @@ describe("TodoService Tests", function() {
     beforeEach(module("myApp"));
 
 
-    beforeEach(inject(function(_$httpBackend_, $rootScope, $injector, $http, $q) {
-
+    beforeEach(inject(function(_$httpBackend_, $injector ) {
         $httpBackend = _$httpBackend_;
-        q = $q;
-
         todoService = $injector.get('TodoService');
-
-
     }));
 
     afterEach(function() {
@@ -31,21 +24,14 @@ describe("TodoService Tests", function() {
         $httpBackend.verifyNoOutstandingRequest();
     });
 
-    it("method getTodos() should resolve mock test data", function() {
-
+    it("method getTodos() should resolve correct mock test data", function() {
         $httpBackend.expectPOST('/GetTodos')
                 .respond(200, {data:mockDataTodos} );
         
         todoService.getTodos().then( function(response) {
-
-            expect(response).toEqual(mockDataTodos);
+            expect(response.data).toEqual( mockDataTodos );
         });
         $httpBackend.flush();
-
     });
-
-
-
-
 
 });
