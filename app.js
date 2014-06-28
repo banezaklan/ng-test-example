@@ -80,5 +80,60 @@ app.controller('MainCtrl', function($scope, $http, UserService, TodoService) {
 
 });
 
+/* <in-place-edit field="phone.brand"></in-place-edit> */
 
+app.directive("inPlaceEdit", function(){
+    return {
+		restrict: 'E',    
+    	scope: {
+    		field: '='
+    	},
+//    	replace: true,
+    	/*template: '{{fieldValue}}'*/
+   		templateUrl: 'templates/in-place-edit.html',
+		link: function(scope, elem, attrs) {
+			scope.editingMode = false;
+			scope.submitField = function(event){
+				if(event.keyCode===13){
+				    scope.editingMode = false;
+				}
+			};
+		 	elem.bind('click', function() {
+		 		
+				scope.$apply(function() {
+			  		scope.editingMode = true;
+				});		 		
+		 		console.log('click!');
+		 	/*
+				elem.css('background-color', 'white');
+				scope.$apply(function() {
+			  		scope.color = "white";
+				});
+				*/
+		  	});
+		 	elem.bind('click', function() {
+		 		
+				scope.$apply(function() {
+			  		scope.editingMode = true;
+				});		 		
+		 		console.log('click!');
+
+		  	});			
+			elem.bind("keydown keypress", function (event) {
+			    if(event.which === 13) {
+					scope.$apply(function() {
+				  		scope.editingMode = true;
+					});
+
+			        event.preventDefault();
+			    }
+			});					  	
+		  	/*
+		  	elem.bind('mouseover', function() {
+				elem.css('cursor', 'pointer');
+		  	});
+		  	*/
+		}   		
+    };	
+});
 
