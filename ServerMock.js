@@ -19,6 +19,22 @@ angular.module('ServerMock', ["myApp",'ngMockE2E'])
 //                // Respond with 404 for all other service calls
 //                $httpBackend.whenGET(new RegExp('service\/.*')).respond(404);
 
+
+// How to test JS regex
+//
+// var urlRegex = /\/api\/checklists\/[1-9][0-9]*/;
+// urlRegex.test('/api/checklists/10');
+
+                $httpBackend.whenGET( new RegExp( /\/todo\/[1-9][0-9]*/ ) ).respond( function( method, url, data, headers ) {
+                    var result = [200];
+                    console.log("Server returing single todo");
+                    result.push({
+                        data: {id: 1, title: 'Do this', done: false}
+                    })
+                    return result;
+                });
+
+
                 $httpBackend.whenPOST('/GetTodos').respond(function(method, url, data, headers) {
                     var result = [200];
                     console.log("Server returing all todos");
