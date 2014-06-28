@@ -3,7 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/bane/Development/angular/ng-tdd/index.html</file>
+            <file>file:/var/www/ng-tdd/app.js</file>
+            <file>file:/var/www/ng-tdd/ServerMock.js</file>
+            <file>file:/var/www/ng-tdd/index.html</file>
+            <file>file:/var/www/ng-tdd/tests/appSpec.js</file>
         </group>
     </open-files>
 </project-private>
