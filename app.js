@@ -119,15 +119,7 @@ app.directive("inPlaceEdit", function(){
 		 		console.log('click!');
 
 		  	});			
-			elem.bind("keydown keypress", function (event) {
-			    if(event.which === 13) {
-					scope.$apply(function() {
-				  		scope.editingMode = true;
-					});
-
-			        event.preventDefault();
-			    }
-			});					  	
+					  	
 		  	/*
 		  	elem.bind('mouseover', function() {
 				elem.css('cursor', 'pointer');
